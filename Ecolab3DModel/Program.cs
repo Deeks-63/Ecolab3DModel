@@ -1,3 +1,6 @@
+using Ecolab3DModel.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<Ecolab3DDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")); 
+});
 
 var app = builder.Build();
 
