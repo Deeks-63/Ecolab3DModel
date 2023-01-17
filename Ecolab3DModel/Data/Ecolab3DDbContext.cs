@@ -19,3 +19,4 @@ namespace Ecolab3DModel.Data
         public DbSet<ShiftDomain> shiftDomains { get;set; }  
     }
 }
+

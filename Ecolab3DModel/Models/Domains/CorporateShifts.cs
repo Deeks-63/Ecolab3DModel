@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -9,6 +10,7 @@ namespace Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence
 {
     public partial class CorporateShifts
     {
+        [Key]
         public int CustomerKey { get; set; }
         public string ShiftDayOfWeek { get; set; }
         public int ShiftEnumeration { get; set; }
