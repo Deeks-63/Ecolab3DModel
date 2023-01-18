@@ -1,4 +1,5 @@
 using Ecolab3DModel.Data;
+using Ecolab3DModel.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<Ecolab3DDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")); 
 });
+builder.Services.AddScoped<ICorporateShiftsServices, CorporateShiftsServices>();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿using Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels;
+﻿using AutoMapper;
+using Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels;
+using Ecolab3DModel.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecolab3DModel.Controllers
@@ -7,35 +9,40 @@ namespace Ecolab3DModel.Controllers
     [Route("CorporateShifts")]
     public class CorporateShiftsController : Controller
     {
-        [HttpGet]
-        public IActionResult GetAllCorporateShifts()
+        private readonly ICorporateShiftsServices corporateShifts;
+        private readonly IMapper mapper;
+
+        public CorporateShiftsController(ICorporateShiftsServices corporateShifts, IMapper mapper)
         {
-            var corporateShifts = new List<CorporateShifts>()
-            {
-                new CorporateShifts
-                {
-                    CustomerKey = 11,
-                    ShiftDayOfWeek = "M,Tu",
-                    ShiftEnumeration = 4,
-                    ShiftName="AM",
-                    StartTime= DateTime.UtcNow.TimeOfDay,
-                    EndTime = DateTime.UtcNow.AddHours(5).TimeOfDay,
-                    NumberOfWorkers=4,
-                    IsActive=true
-                },
-                new CorporateShifts
-                {
-                   CustomerKey = 12,
-                    ShiftDayOfWeek = "M,Tu,W",
-                    ShiftEnumeration = 2,
-                    ShiftName="PM",
-                    StartTime=DateTime.UtcNow.TimeOfDay,
-                    EndTime = DateTime.UtcNow.AddHours(6).TimeOfDay,
-                   NumberOfWorkers=8,
-                    IsActive=true
-                },
-            };
-            return Ok(corporateShifts);
+            this.corporateShifts = corporateShifts;
+            this.mapper = mapper;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllCorporateShifts()
+        {
+            var shifts = await corporateShifts.GetAllAsync();
+
+            //return DTO corporateShifts
+            //var corporateShiftsDTO = new List<Models.DTO.CorporateShifts>();
+            //shifts.ToList().ForEach(shift =>
+            //{
+            //    var corporateDTO = new Models.DTO.CorporateShifts()
+            //    {
+            //        CustomerKey= shift.CustomerKey,
+            //        ShiftDayOfWeek= shift.ShiftDayOfWeek,
+            //        ShiftEnumeration= shift.ShiftEnumeration,  
+            //        StartTime= shift.StartTime,
+            //        EndTime= shift.EndTime,
+            //        ShiftName= shift.ShiftName,
+            //        NumberOfWorkers= shift.NumberOfWorkers,
+            //        IsActive= shift.IsActive,
+            //        CreatedDate= shift.CreatedDate,
+            //        LastModifiedDate= shift.LastModifiedDate
+            //    };
+            //    corporateShiftsDTO.Add(corporateDTO);
+            //});
+            var shiftsDTO = mapper.Map<List<Models.DTO.CorporateShifts>>(shifts);
+            return Ok(shiftsDTO);
         }
     }
 }
