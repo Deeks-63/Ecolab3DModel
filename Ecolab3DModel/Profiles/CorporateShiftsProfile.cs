@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels;
 
 namespace Ecolab3DModel.Profiles
 {
@@ -6,7 +7,7 @@ namespace Ecolab3DModel.Profiles
     {
         public CorporateShiftsProfile()
         {
-            CreateMap<Models.Domain.CorporateShifts, Models.DTO.CorporateShifts>().ReverseMap();
+            CreateMap<CorporateShifts, Models.DTO.CorporateShifts>().ReverseMap();
         }
     }
 }
