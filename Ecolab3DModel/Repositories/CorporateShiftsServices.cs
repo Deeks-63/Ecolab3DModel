@@ -20,6 +20,33 @@ namespace Ecolab3DModel.Repositories
             return await ecolab3DDbContext.CorporateShifts.ToListAsync();
         }
 
-        
+        public async Task<IEnumerable<CorporateShifts>> GetAsync(int CustomerKey)
+        {
+            //return await ecolab3DDbContext.CorporateShifts.FirstOrDefaultAsync(x => x.CustomerKey == CustomerKey);
+            return await ecolab3DDbContext.CorporateShifts.Where(x => x.CustomerKey == CustomerKey).ToListAsync();
+        }
+
+        public async Task<CorporateShifts> UpdateAsync(int CustomerKey, CorporateShifts corporateShifts)
+        {
+           var existingCustomer = await ecolab3DDbContext.CorporateShifts.FirstOrDefaultAsync(x => x.CustomerKey == CustomerKey 
+           && x.ShiftEnumeration == corporateShifts.ShiftEnumeration
+           && x.ShiftDayOfWeek == corporateShifts.ShiftDayOfWeek);
+            if(existingCustomer == null)
+            {
+                return null;
+            }
+            //existingCustomer.ShiftDayOfWeek = corporateShifts.ShiftDayOfWeek;
+            existingCustomer.NumberOfWorkers = corporateShifts.NumberOfWorkers;
+            //existingCustomer.ShiftEnumeration= corporateShifts.ShiftEnumeration;
+            existingCustomer.StartTime= corporateShifts.StartTime;
+            existingCustomer.EndTime= corporateShifts.EndTime;
+            existingCustomer.IsActive = corporateShifts.IsActive;
+            existingCustomer.CreatedDate= corporateShifts.CreatedDate;
+            existingCustomer.ShiftName= corporateShifts.ShiftName;
+            existingCustomer.LastModifiedDate= corporateShifts.LastModifiedDate;
+
+            await ecolab3DDbContext.SaveChangesAsync();
+            return existingCustomer;
+        }
     }
 }
