@@ -10,6 +10,7 @@ namespace Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence
 {
     public partial class CorporateShifts
     {
+        public int Id { get; set; }
         public int CustomerKey { get; set; }
         public string ShiftDayOfWeek { get; set; }
         public int ShiftEnumeration { get; set; }

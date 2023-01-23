@@ -15,6 +15,7 @@ builder.Services.AddDbContext<Ecolab3DDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnectionString")); 
 });
 builder.Services.AddScoped<ICorporateShiftsServices, CorporateShiftsServices>();
+builder.Services.AddScoped<ICustomerGoalRepository, CustomerGoalRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();

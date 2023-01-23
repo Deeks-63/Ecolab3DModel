@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
-
-namespace Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels
+﻿namespace Ecolab3DModel.Models.DTO
 {
-    public partial class CustomerGoal
+    public class CustomerGoal
     {
         public int Id { get; set; }
         public int CustomerKey { get; set; }

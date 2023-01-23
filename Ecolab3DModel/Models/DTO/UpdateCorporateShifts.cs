@@ -2,6 +2,7 @@
 {
     public class UpdateCorporateShifts
     {
+        public int CustomerKey { get; set; }
         public string ShiftDayOfWeek { get; set; }
         public int ShiftEnumeration { get; set; }
         public string ShiftName { get; set; }

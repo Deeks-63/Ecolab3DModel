@@ -2,6 +2,7 @@
 {
     public class CorporateShifts
     {
+        public int Id { get; set; }
         public int CustomerKey { get; set; }
         public string ShiftDayOfWeek { get; set; }
         public int ShiftEnumeration { get; set; }

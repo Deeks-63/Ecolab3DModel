@@ -1,6 +1,9 @@
-﻿using Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels;
+﻿using System.Data;
+using Ecolab.Ecolab3D.Backend.FunctionApplication.Infrastructure.Persistence.EntityFrameworkModels;
 using Ecolab3DModel.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NetTopologySuite.Index.HPRtree;
 
 namespace Ecolab3DModel.Repositories
 {
@@ -15,38 +18,62 @@ namespace Ecolab3DModel.Repositories
         {
             this.ecolab3DDbContext = ecolab3DDbContext;
         }
-        public async Task<IEnumerable<CorporateShifts>> GetAllAsync()
-        {
-            return await ecolab3DDbContext.CorporateShifts.ToListAsync();
-        }
 
-        public async Task<IEnumerable<CorporateShifts>> GetAsync(int CustomerKey)
+        public async Task<CorporateShifts> DeleteAsync(int Id)
         {
-            //return await ecolab3DDbContext.CorporateShifts.FirstOrDefaultAsync(x => x.CustomerKey == CustomerKey);
-            return await ecolab3DDbContext.CorporateShifts.Where(x => x.CustomerKey == CustomerKey).ToListAsync();
-        }
-
-        public async Task<CorporateShifts> UpdateAsync(int CustomerKey, CorporateShifts corporateShifts)
-        {
-           var existingCustomer = await ecolab3DDbContext.CorporateShifts.FirstOrDefaultAsync(x => x.CustomerKey == CustomerKey 
-           && x.ShiftEnumeration == corporateShifts.ShiftEnumeration
-           && x.ShiftDayOfWeek == corporateShifts.ShiftDayOfWeek);
-            if(existingCustomer == null)
+            var singleShift = await ecolab3DDbContext.CorporateShifts.Where(x => x.Id == Id).FirstOrDefaultAsync();
+            if(singleShift == null)
             {
                 return null;
             }
-            //existingCustomer.ShiftDayOfWeek = corporateShifts.ShiftDayOfWeek;
-            existingCustomer.NumberOfWorkers = corporateShifts.NumberOfWorkers;
-            //existingCustomer.ShiftEnumeration= corporateShifts.ShiftEnumeration;
-            existingCustomer.StartTime= corporateShifts.StartTime;
-            existingCustomer.EndTime= corporateShifts.EndTime;
-            existingCustomer.IsActive = corporateShifts.IsActive;
-            existingCustomer.CreatedDate= corporateShifts.CreatedDate;
-            existingCustomer.ShiftName= corporateShifts.ShiftName;
-            existingCustomer.LastModifiedDate= corporateShifts.LastModifiedDate;
-
+            //Delete the shift
+            //ecolab3DDbContext.CorporateShifts.Remove((CorporateShifts)singleShift);
+            //ecolab3DDbContext.CorporateShifts.Where(x => x.Id == Id);
+            //foreach(var singleShift in CorporateShiftsServices)
+            //{
+            //    if (row.IsNull("foo")) row["foo"] = "-";
+            //    if (row.IsNull("bar")) row["bar"] = "-";
+            //}
+            singleShift.IsActive = false;
             await ecolab3DDbContext.SaveChangesAsync();
-            return existingCustomer;
+            return (CorporateShifts)singleShift;
         }
+
+        public async Task<IEnumerable<CorporateShifts>> GetAllAsync()
+        {
+            return await ecolab3DDbContext.CorporateShifts.Where(x => x.IsActive == true).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CorporateShifts>> GetAsync(int Id)
+        {
+            //return await ecolab3DDbContext.CorporateShifts.FirstOrDefaultAsync(x => x.CustomerKey == CustomerKey);
+            return await ecolab3DDbContext.CorporateShifts.Where(x => x.Id == Id).ToListAsync();
+        }
+
+        public async Task<IEnumerable<CorporateShifts>> UpdateAsync(int Id, IEnumerable<CorporateShifts> corporateShifts)
+        {
+            var allShifts = await ecolab3DDbContext.CorporateShifts.ToListAsync();
+            var allFilteredShifts = allShifts.Where(o =>
+             corporateShifts.Where(x => x.Id == Id).Any()
+            ).ToList();
+            foreach (var existingCustomer in allFilteredShifts)
+            {
+                var input = corporateShifts.Where(x => x.Id == Id).FirstOrDefault();
+
+                existingCustomer.ShiftDayOfWeek = input.ShiftDayOfWeek;
+                existingCustomer.NumberOfWorkers = input.NumberOfWorkers;
+                //existingCustomer.ShiftEnumeration= corporateShifts.ShiftEnumeration;
+                existingCustomer.StartTime = input.StartTime;
+                existingCustomer.EndTime = input.EndTime;
+                existingCustomer.IsActive = input.IsActive;
+                existingCustomer.CreatedDate = input.CreatedDate;
+                existingCustomer.ShiftName = input.ShiftName;
+                existingCustomer.LastModifiedDate = input.LastModifiedDate;
+            }
+            await ecolab3DDbContext.SaveChangesAsync();
+            return null;
+        }
+
+        
     }
 }
